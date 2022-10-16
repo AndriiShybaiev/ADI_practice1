@@ -1,0 +1,14 @@
+{
+  "name": "adi_practice1",
+  "version": "1.0.0",
+  "description": "Andrii Sybaiev, ADI, Univercity on Alicante",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrii Shybaiev",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
