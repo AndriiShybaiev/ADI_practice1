@@ -1,4 +1,5 @@
 var express = require('express')
+var mysql = require('mysql');
 var app = express()
 app.use(express.json())
 
@@ -8,6 +9,17 @@ usuarios.set(2, {id:2, documento:"XYZ987", nombre:"John", tipo:2})
 var currentID =3;
 
 app.get('/api/usuarios', function(pet, resp) {
+	var con = mysql.createConnection({
+		host: "bkwrla1sjpp9vda8hshy-mysql.services.clever-cloud.com",
+		user: "udnenzb9jdut66vk",
+		password: "wqbkA5NcA4JOZpPXd4oe"
+	});
+
+	con.connect(function(err) {
+		if (err) throw err;
+		console.log("Connected!");
+	});
+
     resp.status(200)
     resp.send(Array.from(usuarios.values()))
     resp.end()
