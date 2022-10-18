@@ -1,27 +1,56 @@
 var express = require('express')
+
+
+//СМ ИЗБРАННОЕ
+const knex = require('knex')({
+	client: 'mysql',
+	connection: {
+		host : "bkwrla1sjpp9vda8hshy-mysql.services.clever-cloud.com",
+		port : 3306,
+		user : "udnenzb9jdut66vk",
+		password : "wqbkA5NcA4JOZpPXd4oe",
+		database : "bkwrla1sjpp9vda8hshy"
+	}
+});
+
+
+
+
+
+
+
+
 var mysql = require('mysql');
 var app = express()
 app.use(express.json())
 
-var usuarios = new Map()
-usuarios.set(1, {id:1, documento:"ABC123", nombre:"Andrii", tipo:1})
-usuarios.set(2, {id:2, documento:"XYZ987", nombre:"John", tipo:2})
-var currentID =3;
+// var usuarios = new Map()
+// usuarios.set(1, {id:1, documento:"ABC123", nombre:"Andrii", tipo:1})
+// usuarios.set(2, {id:2, documento:"XYZ987", nombre:"John", tipo:2})
+// var currentID =3;
 
-app.get('/api/usuarios', function(pet, resp) {
-	var con = mysql.createConnection({
-		host: "bkwrla1sjpp9vda8hshy-mysql.services.clever-cloud.com",
-		user: "udnenzb9jdut66vk",
-		password: "wqbkA5NcA4JOZpPXd4oe"
-	});
+app.get('/api/usuarios', async function(pet, resp) {
 
-	con.connect(function(err) {
-		if (err) throw err;
-		console.log("Connected!");
-	});
+
+	//MYSQL
+	// var con = mysql.createConnection({
+	// 	host: "bkwrla1sjpp9vda8hshy-mysql.services.clever-cloud.com",
+	// 	user: "udnenzb9jdut66vk",
+	// 	password: "wqbkA5NcA4JOZpPXd4oe"
+	// });
+	//
+	// con.connect(function(err) {
+	// 	if (err) throw err;
+	// 	console.log("Connected!");
+	// });
+	var users = await knex.select().from('usuarios')
+
+
+
 
     resp.status(200)
-    resp.send(Array.from(usuarios.values()))
+    //resp.send(Array.from(usuarios.values())
+	resp.json({usuarios: users})
     resp.end()
     
 })
