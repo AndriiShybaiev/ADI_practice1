@@ -1,7 +1,4 @@
 var express = require('express')
-
-
-//СМ ИЗБРАННОЕ
 const knex = require('knex')({
 	client: 'mysql',
 	connection: {
@@ -20,7 +17,7 @@ const knex = require('knex')({
 
 
 
-var mysql = require('mysql');
+//var mysql = require('mysql');
 var app = express()
 app.use(express.json())
 
@@ -30,39 +27,21 @@ app.use(express.json())
 // var currentID =3;
 
 app.get('/api/usuarios', async function(pet, resp) {
-
-
-	//MYSQL
-	// var con = mysql.createConnection({
-	// 	host: "bkwrla1sjpp9vda8hshy-mysql.services.clever-cloud.com",
-	// 	user: "udnenzb9jdut66vk",
-	// 	password: "wqbkA5NcA4JOZpPXd4oe"
-	// });
-	//
-	// con.connect(function(err) {
-	// 	if (err) throw err;
-	// 	console.log("Connected!");
-	// });
 	var users = await knex.select().from('usuarios')
-
-
-
-
     resp.status(200)
-    //resp.send(Array.from(usuarios.values())
 	resp.json({usuarios: users})
     resp.end()
     
 })
 
-app.get('/api/usuarios/:id', function(pet, resp){
+app.get('/api/usuarios/:id', async function(pet, resp){
 	var id = parseInt(pet.params.id)
 	if (isNaN(id)) {
 		resp.status(400)
 		resp.send("Id should be number")
 	}
 	else {
-		var obj = usuarios.get(id)
+		var obj = await knex.select().from('usuarios').where('id', id)	//usuarios.get(id)
 		if (!obj) {
 			resp.status(404)
 			resp.send("user with" + id + " doesnt exist")
