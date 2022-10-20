@@ -73,6 +73,41 @@ app.post('/api/usuarios',async function(pet, resp){
 
 })
 
+app.delete('/api/usuarios/:id', async function(pet, resp){
+	var id = parseInt(pet.params.id)
+	if (isNaN(id)) {
+		resp.status(400)
+		resp.send("Id should be number")
+	}
+	else {
+		var obj = await knex.del().from('usuarios').where('id', id)	//usuarios.get(id)
+		if (!obj) {
+			resp.sendStatus(404)
+			resp.send("user with" + id + " doesnt exist")
+		}
+		else {
+			resp.sendStatus(200)
+			resp.end()
+		}
+	}
+})
+
+app.put('/api/usuarios',async function(pet, resp){
+	var obj = pet.body
+	var nuevo = {documento:obj.documento, tipo:parseInt(obj.tipo), nombre:obj.nombre}
+	if (nuevo.nombre && !isNaN(nuevo.tipo) && !isNaN(obj.id)) {
+		await knex('usuarios').update(nuevo).where('id', obj.id)
+		resp.status(201)
+		resp.header('Location', 'http://localhost:8080/api/usuarios/'+idActual)
+		resp.send(nuevo)
+	}
+	else {
+		resp.status(400)
+		resp.send("falta propiedad nombre y/o cantidad o esta última no es numérica")
+	}
+	resp.end()
+
+})
 
 
 
