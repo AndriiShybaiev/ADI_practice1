@@ -54,12 +54,33 @@ app.get('/api/usuarios/:id', async function(pet, resp){
 	}
 })
 
+app.post('/api/usuarios',async function(pet, resp){
+	var obj = pet.body
+	var nuevo = {id: idActual, documento:obj.documento, tipo:parseInt(obj.tipo), nombre:obj.nombre}
+	if (nuevo.nombre && !isNaN(nuevo.tipo)) {
+		//lista.set(idActual,nuevo)
+		await knex('usuarios').insert(nuevo)
+		resp.status(201)
+		resp.header('Location', 'http://localhost:8080/api/usuarios/'+idActual)
+		resp.send(nuevo)
+		idActual++;
+	}
+	else {
+		resp.status(400)
+		resp.send("falta propiedad nombre y/o cantidad o esta última no es numérica")
+	}
+	resp.end()
+
+})
+
+
+
 
 
 var lista = new Map()
 lista.set(1, {id:1, nombre:"pan", cantidad:1})
 lista.set(2, {id:2, nombre:"agua", cantidad:1})
-var idActual = 3;
+var idActual = 5;
 
 app.get('/saludo', function(pet,resp){
 	resp.send("Hola soy Express")
