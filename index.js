@@ -185,11 +185,11 @@ app.delete('/api/matriculas/:id', checkJWT, async function(pet, resp){
 
 app.put('/api/matriculas', checkJWT, async function(pet, resp){
 	var obj = pet.body
-	var nuevo = {documento:obj.documento, tipo:parseInt(obj.tipo), nombre:obj.nombre}
-	if (nuevo.nombre && !isNaN(nuevo.tipo) && !isNaN(obj.id)) {
+	var nuevo = {id:parseInt(obj.id), profession:obj.profession}
+	if (nuevo.profession && !isNaN(obj.id)) {
 		await knex('matriculas').update(nuevo).where('id', obj.id)
 		resp.status(201)
-		resp.header('Location', 'http://localhost:8080/api/matricuas/'+obj.id)
+		resp.header('Location', 'http://localhost:8080/api/matriculas/'+obj.id)
 		resp.send(nuevo)
 	}
 	else {
@@ -200,7 +200,13 @@ app.put('/api/matriculas', checkJWT, async function(pet, resp){
 
 })
 
+app.get('/api/contratos', checkJWT, async function(pet, resp) {
+	var contracts = await knex.select().from('contratos')
+	resp.status(200)
+	resp.json({contracts: contracts})
+	resp.end()
 
+})
 
 app.listen(8080, function(){
 	console.log("Server live")
