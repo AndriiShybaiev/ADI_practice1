@@ -208,6 +208,81 @@ app.get('/api/contratos', checkJWT, async function(pet, resp) {
 
 })
 
+app.get('/api/contratos/:id', async function(pet, resp){
+	var id = parseInt(pet.params.id)
+	if (isNaN(id)) {
+		resp.status(400)
+		resp.send("Id should be number")
+	}
+	else {
+		var obj = await knex.select().from('contratos').where('id', id)
+		if (!obj) {
+			resp.status(404)
+			resp.send("contrato with" + id + " doesnt exist")
+		}
+		else {
+			resp.status(200)
+			resp.send(obj)
+			resp.end()
+		}
+	}
+})
+
+app.post('/api/contratos', checkJWT, async function(pet, resp){
+	var obj = pet.body
+	const maxIdQuery = await knex('contratos').max('id as maxId').first()
+	var nuevo = {id: maxIdQuery.maxId+1, usuario_id:obj.usuario_id, matricula_id:obj.matricula_id, year:obj.year, price:parseFloat(obj.price)}
+	if (nuevo.usuario_id && nuevo.matricula_id && nuevo.year && nuevo.price && !isNaN(nuevo.id)) {
+		await knex('matriculas').insert(nuevo)
+		resp.status(201)
+		resp.header('Location', 'http://localhost:8080/api/contratos/'+nuevo.id)
+		resp.send(nuevo)
+	}
+	else {
+		resp.status(400)
+		resp.send("falta propiedad nombre y/o cantidad o esta última no es numérica")
+	}
+	resp.end()
+
+})
+
+app.delete('/api/contratos/:id', checkJWT, async function(pet, resp){
+	var id = parseInt(pet.params.id)
+	if (isNaN(id)) {
+		resp.status(400)
+		resp.send("Id should be number")
+	}
+	else {
+		var obj = await knex.del().from('contratos').where('id', id)	//usuarios.get(id)
+		if (!obj) {
+			resp.sendStatus(404)
+			resp.send("contract with" + id + " doesnt exist")
+		}
+		else {
+			resp.sendStatus(200)
+			resp.end()
+		}
+	}
+})
+
+app.put('/api/contratos', checkJWT, async function(pet, resp){
+	var obj = pet.body
+	var nuevo = {id:parseInt(obj.id), usuario_id:obj.usuario_id, matricula_id:obj.matricula_id, year:obj.year, price:parseFloat(obj.price)}
+	if (nuevo.usuario_id && nuevo.matricula_id && nuevo.year && nuevo.price && !isNaN(nuevo.id)) {
+		await knex('contratos').update(nuevo).where('id', obj.id)
+		resp.status(201)
+		resp.header('Location', 'http://localhost:8080/api/contratos/'+obj.id)
+		resp.send(nuevo)
+	}
+	else {
+		resp.status(400)
+		resp.send("falta propiedad nombre y/o cantidad o esta última no es numérica")
+	}
+	resp.end()
+
+})
+
+
 app.listen(8080, function(){
 	console.log("Server live")
 })
