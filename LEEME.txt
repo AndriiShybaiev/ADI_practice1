@@ -1,0 +1,6 @@
+(google traslate de ingles, originl en README.txt)
+Andrii Shybaiev Práctica 1 ADI 2022
+En esta práctica se implementaron todos los requisitos obligatorios en las tablas “Usuarios”, “Contratos” “Matriculas”. 1 solicitud de inicio de sesión y 5 solicitudes para cada una de las tablas implementadas, 16 en total. Todas las solicitudes, excepto la solicitud para obtener todas las profesiones y la profesión por identificación, requieren token JWT, esas 2 son solicitudes "públicas" para invitados.
+1. Se agregó una conexión a la base de datos MySQL de desarrollo en la nube, todas las solicitudes en realidad cambian la base de datos
+2. Pruebas automatizadas en el archivo Postman agregado
+3. Se hizo API usando Swagger https://app.swaggerhub.com/apis/1246090/ADI_Education/2.0.0 en la última versión se eliminaron RestKey-s, que no son necesarios con JWT, se agregó la tabla "contratos" para reflejar mejor la relación de muchos a muchos entre “usuarios” y “matriculas”
